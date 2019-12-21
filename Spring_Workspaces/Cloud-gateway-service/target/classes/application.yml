@@ -4,15 +4,19 @@ spring:
         uri : lb://MICROSERVICE-1
         predicates:        - Path=/Microservice-1/**
         filters:
+        - name: Hystrix
+          args:
+           name: default
+           
         - name: Retry
-          args:            retries: 1
-            statuses: BAD_GATEWAY,GATEWAY_TIMEOUT
+          args:            retries: 3
+            series: SERVER_ERROR,CLIENT_ERROR,REDIRECTION,SUCCESSFUL,INFORMATIONAL
+#            statuses: BAD_GATEWAY
             backoff:
-            firstBackoff: 10ms
-            maxBackoff : 50ms
-            factor : 2
-            basedOnPreviousValue: false
-
+              firstBackoff: 10ms
+              maxBackoff: 50ms
+#            exceptions: org.springframework.cloud.gateway.support.TimeoutException
+            
  
     
 eureka:  client:    register-with-eureka: true
@@ -20,4 +24,4 @@ eureka:  client:    register-with-eureka: true
     service-url:      defaultZone : http://localhost:1000/eureka
 
 server:  port: 9010
-  
+hystrix:  command:    default:      execution:        isolation:          thread:            timeoutInMilliseconds: 5000
