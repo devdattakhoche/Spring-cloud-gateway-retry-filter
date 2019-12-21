@@ -1,0 +1,5 @@
+server:
+  port: 1001
+eureka:  client:
+    service-url:      defaultZone : http://localhost:1000/eureka    fetch-registry: true    register-with-eureka: true
+spring:  application:    name: Microservice-1

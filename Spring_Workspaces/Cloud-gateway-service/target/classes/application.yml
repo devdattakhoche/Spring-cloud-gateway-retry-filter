@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: Gateway-service  cloud:    gateway:      routes:      - id : Microservice-1
+        uri : lb://MICROSERVICE-1
+        predicates:        - Path=/Microservice-1/**
+        filters:
+        - name: Retry
+          args:            retries: 1
+            statuses: BAD_GATEWAY,GATEWAY_TIMEOUT
+            backoff:
+            firstBackoff: 10ms
+            maxBackoff : 50ms
+            factor : 2
+            basedOnPreviousValue: false
+
+ 
+    
+eureka:  client:    register-with-eureka: true
+    fetch-registry: true
+    service-url:      defaultZone : http://localhost:1000/eureka
+
+server:  port: 9010
+  
